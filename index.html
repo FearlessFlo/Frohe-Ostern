@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frohe Ostern!</title>
+<link rel="icon" href="https://scanned.page/oqg/favicon.png">
+
+<!-- Original CSS-Dateien -->
+<link href="index-Dateien/main.051a643d.css" rel="stylesheet">
+<link rel="stylesheet" href="index-Dateien/css.css" media="all">
+
+<!-- Spotify-Style Player CSS angepasst -->
+<style>
+#spotify-player {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  background: #94c01f; /* Grünton der Seite */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: white;
+  font-family: sans-serif;
+}
+#spotify-player .controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+#spotify-player button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 20px;
+}
+#spotify-player button:hover {
+  color: #181818;
+}
+#spotify-player .play-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  color: #94c01f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+#spotify-player .play-btn:hover {
+  transform: scale(1.1);
+}
+#spotify-player .time-container {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #f1f1f1;
+}
+#spotify-player input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.3);
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+}
+#spotify-player input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+#spotify-player input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+.volume-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.volume-container input[type="range"] {
+  width: 80px;
+}
+</style>
+</head>
+
+<body>
+<div id="root">
+  <div class="App">
+    <div class="flex flex-col justify-center items-center overflow-x-clip">
+
+      <!-- Hintergrund/Backdrop unverändert -->
+      <div class="flex items-center justify-center relative w-full h-full -z-10 overflow-x-clip">
+        <div class="qr-backdrop" style="--bg-color: #94c01f; --height: 403.7166748046875px; --offset: 10px;" id="color_palette">
+          <svg width="375" height="526" viewBox="0 0 375 526" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+            <path d="M0 0H375V506C375 506 293.5 461 187.5 506C81.5 551 0 506 0 506V0Z" fill="var(--bg-color)" class="duration-500"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Haupt-Content -->
+      <div class="flex flex-col items-center justify-center mt-[50px] xs:mt-[54px] w-full max-w-[450px] px-[16px] zoom-block">
+        <!-- Original Bild -->
+        <div>
+          <img data-backdrop-offset="10px" src="index-Dateien/xi0D77_7af35cba919f819a.png" class="w-full shadow-[1px_6px_30px_rgba(0,31,14,0.05)] rounded-[4px]" alt="">
+        </div>
+
+        <!-- Spotify-Style Audio Player -->
+        <div id="spotify-player">
+          <audio id="audio" src="index-Dateien/xi0D77_cd624e6d4dab80b7.mp3"></audio>
+          <div class="time-container">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+          <input type="range" id="progress" min="0" max="100" value="0">
+          <div class="controls">
+            <button id="prev">&#9664;&#9664;</button>
+            <button class="play-btn" id="play">&#9654;</button>
+            <button id="next">&#9654;&#9654;</button>
+          </div>
+          <div class="volume-container">
+            <span>&#128266;</span>
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="0.75">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Player JS
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('play');
+const progress = document.getElementById('progress');
+const currentTimeEl = document.getElementById('current-time');
+const durationEl = document.getElementById('duration');
+const volumeSlider = document.getElementById('volume');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audio.duration);
+});
+
+playBtn.addEventListener('click', () => {
+  if(audio.paused){
+    audio.play();
+    playBtn.innerHTML = '&#10074;&#10074;'; // Pause
+  } else {
+    audio.pause();
+    playBtn.innerHTML = '&#9654;'; // Play
+  }
+});
+
+audio.addEventListener('timeupdate', () => {
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  progress.value = progressPercent;
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+progress.addEventListener('input', () => {
+  const seekTime = (progress.value / 100) * audio.duration;
+  audio.currentTime = seekTime;
+});
+
+volumeSlider.addEventListener('input', () => {
+  audio.volume = volumeSlider.value;
+});
+
+// Vor- und Zurückspulen (10 Sekunden)
+prevBtn.addEventListener('click', () => {
+  audio.currentTime = Math.max(0, audio.currentTime - 10);
+});
+nextBtn.addEventListener('click', () => {
+  audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+});
+
+function formatTime(seconds){
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+</script>
+</body>
+</html>
